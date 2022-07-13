@@ -45,6 +45,7 @@ contract Exchange is ERC20 {
 
     function removeLiquidity(uint _amount) public returns (uint, uint) {
         require(_amount > 0, "amount should be greater than zero");
+        uint ethReserve = address(this).balance;
         uint _totalSupply = totalSupply();
 
         uint ethAmount = (ethReserve * _amount)/ _totalSupply;
@@ -83,5 +84,20 @@ contract Exchange is ERC20 {
         ERC20(cryptoDevTokenAddress).transfer(msg.sender, tokensBought);
     }
 
+    function cryptoDevTokenToEth(uint _tokensSold, uint _mintEth) public {
+        uint256 tokenReserve = getReserve();
+        uint256 ethBought = getAmountOfTokens(
+            _tokensSold,
+            tokenReserve,
+            address(this).balance
+        );
+        require(ethBought >= _mintEth, "insufficent output amount");
+        ERC20(cryptoDevTokenAddress).transferFrom(
+            msg.sender,
+            address(this),
+            _tokensSold
+        );
+        payable(msg.sender).transfer(ethBought);
+    }
 
 }
