@@ -53,4 +53,23 @@ export const swapTokens = async (
         signer
     );
     let tx;
+    if (ethSelected) {
+        tx = await exchangeContract.ethToCryptoDevToken(
+            tokenToBeReceivedAfterSwap,
+            {
+                value: swapAmountWei,
+            }
+        );
+    } else {
+        tx = await tokenContract.approve(
+            EXCHANGE_CONTRACT_ADDRESS,
+            swapAmountWei.toString()
+        );
+        await tx.wait();
+        tx = await exchangeContract.cryptoDevTokenToEth(
+            swapAmountWei,
+            tokenToBeReceivedAfterSwap
+        );
+    }
+    await tx.wait();
 }
