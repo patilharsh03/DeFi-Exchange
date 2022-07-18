@@ -18,7 +18,7 @@ import { swapTokens, getAmountOfTokensReceivedFromSwap} from "../utils/swap";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
-  const [liquidity, setLiquidity] = useState(true);
+  const [liquidityTab, setLiquidityTab] = useState(true);
   const zero = BigNumber.from(0);
   const [ethBalance, setEtherBalance] = useState(zero);
   const [reservedCD, setReservedCD] = useState(zero);
@@ -53,6 +53,7 @@ export default function Home() {
         setCDBalance(_cdBalance);
         setLPBalance(_lpBalance);
         setReservedCD(_reservedCD);
+        setReservedCD(_reservedCD);
         setEtherBalanceContract(_ethBalanceContract);
     } catch (err) {
       console.error(err);
@@ -84,7 +85,7 @@ export default function Home() {
     }
   }
 
-  const _getAmountOfTokensReceivedFromSwap = async (_swapAmountWEI) => {
+  const _getAmountOfTokensReceivedFromSwap = async (_swapAmount) => {
     try {
       const _swapAmountWEI = utils.parseEther(_swapAmount.toString());
       if(!_swapAmountWEI.eq(zero)) {
@@ -307,13 +308,83 @@ export default function Home() {
             type="number"
             placeholder="Amount"
             onChange={async (e) => {
-              setSwapAmount(e.target.value || "0");
-              
+              setSwapAmount(e.target.value || "");
+              await _getAmountOfTokensReceivedFromSwap(e.target.value || '0');
             }}
+            className={styles.input}
+            value={swapAmount}
+        /> 
+        <select 
+          className={styles.select}
+          name="dropdown"
+          id="dropdown"
+          onChange={async () => {
+            setEthSelected(!ethSelected);
+            await _getAmountOfTokensReceivedFromSwap(0);
+            setSwapAmount("");
+          }}    
+        >
+          <option value="eth">Ethereum</option>
+          <option value="cryptoDevToken">Crypto Dev Token</option>
+        </select>  
+        <br />
+        <div className={styles.inputDiv}>
+          {ethSelected ? `You will get ${utils.formatEther(
+            tokenToBeReceivedAfterSwap
+          )}Crypto Dev Tokens`
+            : `You will get ${utils.formatEther(
+              tokenToBeReceivedAfterSwap
+            )}Eth`}
         </div>
-      )
+        <button className={styles.button1} onClick={_swapTokens}>
+          Swap
+        </button>
+        </div>
+      );
     }
-
   }
 
+  return (
+    <div>
+      <Head>
+        <title>Crypto Devs</title>
+        <meta name="description" content="Whitelist-Dapp" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className={styles.main}>
+        <div>
+          <h1 className={styles.title}>Welcome to Crypto Devs Exchange!</h1>
+          <div className={styles.description}>
+            Exchange Ethereum &#60;&#62; Crypto Dev Tokens
+          </div>
+          <div>
+            <button 
+              className={styles.button}
+              onClick={() => {
+                setLiquidityTab(!liquidityTab);
+              }}
+            >
+              Liquidity
+            </button>
+            <button 
+              className={styles.button}
+              onClick={() => {
+                setLiquidityTab(false);
+              }}  
+            >
+              Swap
+            </button>  
+          </div>
+          {renderButton()}
+        </div>
+        <div>
+          <img className={styles.image} src="./crytodev.svg" />
+        </div>  
+        </div>
+
+        <footer className={styles.footer}>
+              Made with &#10084; by Crypto Devs
+        </footer>
+      </div>
+  )
 }
