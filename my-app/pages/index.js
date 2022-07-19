@@ -53,7 +53,6 @@ export default function Home() {
         setCDBalance(_cdBalance);
         setLPBalance(_lpBalance);
         setReservedCD(_reservedCD);
-        setReservedCD(_reservedCD);
         setEtherBalanceContract(_ethBalanceContract);
     } catch (err) {
       console.error(err);
@@ -361,7 +360,7 @@ export default function Home() {
             <button 
               className={styles.button}
               onClick={() => {
-                setLiquidityTab(!liquidityTab);
+                setLiquidityTab(true);
               }}
             >
               Liquidity
@@ -384,7 +383,7 @@ export default function Home() {
 
         <footer className={styles.footer}>
               Made with &#10084; by Crypto Devs
-        </footer>
+        </footer> 
       </div>
   )
 }

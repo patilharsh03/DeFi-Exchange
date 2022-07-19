@@ -42,8 +42,8 @@ export const getCDTokensBalance = async (provider, address) => {
 export const getLPTokensBalance = async (provider, address) => {
     try {
         const exchangeContract = new Contract (
-            EXCHANGE_CONTRACT_ABI,
             EXCHANGE_CONTRACT_ADDRESS,
+            EXCHANGE_CONTRACT_ABI,
             provider
         );
         const balanceOfLPTokens = await exchangeContract.balanceOf(address);
@@ -56,8 +56,8 @@ export const getLPTokensBalance = async (provider, address) => {
 export const getReserveOfCDTokens = async (provider) => {
     try {
         const exchangeContract = new Contract (
-            EXCHANGE_CONTRACT_ABI,
             EXCHANGE_CONTRACT_ADDRESS,
+            EXCHANGE_CONTRACT_ABI,
             provider
         );
         const reserve = await exchangeContract.getReserve();
